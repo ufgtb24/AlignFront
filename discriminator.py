@@ -8,12 +8,21 @@ class discriminator:
     def __init__(self):
         pass
     
-    def extract_layer(self,input,u,r):
-        net_u=slim.fully_connected(input,u)
+    def extract_layer(self,input,new_u,new_r):
+        '''
+        :param input: [batch_size,r,u]
+        :param new_u: dim of encoding
+        :param new_r: main structure number
+        :return:
+        '''
+        net_u=slim.fully_connected(input,new_u)
+        #[batch_size,r,new_u]
         net_u = slim.dropout(net_u, keep_prob=0.5, scope='Dropout_u')
         
+        #[batch_size,u,r]
         net_r=tf.transpose(input,[0,2,1])
-        net_r=slim.fully_connected(net_r,r)
+        net_r=slim.fully_connected(net_r,new_r)
+        #[batch_size,u,new_r]
         net_r = slim.dropout(net_r, keep_prob=0.5, scope='Dropout_r')
         
         return net_u,net_r
@@ -29,7 +38,7 @@ class discriminator:
         '''
         with tf.variable_scope('extractor'):
             with slim.arg_scope([slim.fully_connected],normalizer_fn=bn_layer_top):
-                #[batch_size,n,da]
+                #[batch_size,n,da] rank 1 共享变量
                 net=slim.fully_connected(seq,da)
                 net=slim.dropout(net, keep_prob=0.5, scope='Dropout_1b')
                 #[batch_size,n,r]
