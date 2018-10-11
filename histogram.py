@@ -54,19 +54,17 @@ class Histogrammer:
         '''
         get histogram of distance between two teeth count on given range
         :param tooth_pair:
-        :param center_list: a list [nc]
-        :return: [num_batch,nc]
+        :param center_list: a list [num_centers]
+        :return: [num_batch,num_centers]
         '''
         internal= self.center_list[1] - self.center_list[0]
-        # [num_batch,plain_pt_num,nc]
+        # [num_batch,plain_pt_num,num_centers]
         d=tf.expand_dims(self.distance_mulpt(tooth_pair), axis=-1)
-        # [nc]
+        # [num_centers]
         c=tf.constant(self.center_list)
-        # [num_batch,nc]
+        # [num_batch,num_centers]
         h=tf.reduce_sum(tf.minimum(tf.abs(d-c)/internal,0),axis=1)
         return h
-    
-        
     
     def dis_between_box(self, box1, pos1, box2, pos2):
         '''

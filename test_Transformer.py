@@ -2,7 +2,7 @@ import mayavi.mlab
 import numpy as np
 from math import pi ,sin, cos
 import tensorflow as tf
-import Transformer as tr
+import space_trans as tr
 
 data = (100, 100, 100)
 data = np.zeros(data)
